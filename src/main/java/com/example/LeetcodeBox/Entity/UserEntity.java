@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,6 +19,7 @@ import lombok.Setter;
 @AllArgsConstructor// creates constructor with args
 @Getter
 @Setter
+@Builder
 public class UserEntity extends BaseEntity{
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
