@@ -1,5 +1,7 @@
 package com.example.LeetcodeBox.Controller;
 
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,5 +21,15 @@ public class TagController {
     @PostMapping("/create/{name}")
     public ResponseWrapperDto CreateTag(@PathVariable String name){
         return tagService.CreateTag(name);
+    }
+    
+    @GetMapping("/get-all")
+    public ResponseWrapperDto GetAllTags(){
+        return tagService.GetAllTags();
+    }
+
+    @DeleteMapping("/delete/{name}")
+    public ResponseWrapperDto DeleteTag(@PathVariable String name){
+        return tagService.DeleteTag(name);
     }
 }

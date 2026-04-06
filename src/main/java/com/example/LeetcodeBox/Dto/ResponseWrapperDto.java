@@ -21,7 +21,7 @@ import lombok.Setter;
 public class ResponseWrapperDto {
 
     //error code
-    private Long status;
+    private int status;
     private String message;
 
     //pagination
