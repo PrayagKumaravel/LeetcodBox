@@ -21,7 +21,9 @@ public class UserRequestDto {
     @NotBlank(message ="Name is required")
     private String name;
 
+    @NotBlank(message="MailId is required")
     private String mailId;
 
+    @NotBlank(message ="Password is required")
     private String password;
 }
