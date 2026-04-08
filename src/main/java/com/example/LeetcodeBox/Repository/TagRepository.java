@@ -11,4 +11,6 @@ import java.util.Optional;
 //syntax JpaRepository<entity,primary datatype>
 public interface TagRepository extends JpaRepository<TagEntity,Long>{
     Optional<TagEntity> findByName(String name);
+
+    void deleteByName(String name);
 }

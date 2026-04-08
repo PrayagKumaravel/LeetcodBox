@@ -46,10 +46,7 @@ public class TagService {
     }
 
     public ResponseWrapperDto DeleteTag(String name){
-        tagRepository.delete(TagEntity.builder()
-        .name(name.toUpperCase())
-        .build()
-        );
+        tagRepository.deleteByName(name.toUpperCase());
         return ResponseWrapperDto.builder().status(200).message("Deletion done sucessfully").build();
     }
 

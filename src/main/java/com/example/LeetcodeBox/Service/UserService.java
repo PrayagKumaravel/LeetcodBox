@@ -10,10 +10,12 @@ import com.example.LeetcodeBox.Dto.UserResponseDto;
 import com.example.LeetcodeBox.Entity.UserEntity;
 import com.example.LeetcodeBox.Repository.UserRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     
     private final UserRepository userRepository;
@@ -32,6 +34,6 @@ public class UserService {
             );
         }
 
-        return ResponseWrapperDto.builder().users(userResponseDtos).build();
+        return ResponseWrapperDto.builder().status(200).users(userResponseDtos).build();
     }
 }
