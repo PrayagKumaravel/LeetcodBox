@@ -21,4 +21,6 @@ public class UserResponseDto {
     private String name;
     
     private String mailId;
+
+    private String username;
 }

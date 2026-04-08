@@ -7,7 +7,9 @@ import com.example.LeetcodeBox.Entity.UserEntity;
 import java.util.Optional;
 
 
+
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity,Long>{
     Optional<UserEntity> findByName(String name);
+    Optional<UserEntity> findByMailId(String mailId);
 }

@@ -26,7 +26,6 @@ public class UserEntity extends BaseEntity{
     private Long id;
 
     @NotBlank(message="UserName can't be empty")
-    @Column(unique=true)//since leetcode user id
     private String name;
 
     @NotBlank(message="Email can't be empty")
@@ -35,4 +34,7 @@ public class UserEntity extends BaseEntity{
 
     @NotBlank(message="Password can't be empty")
     private String password;
+
+    @Column(unique = true)
+    private String username;
 }
