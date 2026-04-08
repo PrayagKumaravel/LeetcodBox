@@ -2,8 +2,6 @@ package com.example.LeetcodeBox.Service;
 
 import java.util.Optional;
 
-import javax.imageio.IIOException;
-
 import org.springframework.stereotype.Service;
 
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
