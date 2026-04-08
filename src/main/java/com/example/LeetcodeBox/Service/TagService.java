@@ -13,10 +13,12 @@ import com.example.LeetcodeBox.Exception.EmptyEntityException;
 import com.example.LeetcodeBox.Exception.EntryExistsAlreadyException;
 import com.example.LeetcodeBox.Repository.TagRepository;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class TagService {
     private final TagRepository tagRepository;
 
