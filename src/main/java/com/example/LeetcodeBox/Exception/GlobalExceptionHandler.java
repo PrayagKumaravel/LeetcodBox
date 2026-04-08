@@ -27,4 +27,22 @@ public class GlobalExceptionHandler {
         .build();
         return new ResponseEntity<>(responseWrapperDto,HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(exception = EntryDoesntExistsException.class)
+    public ResponseEntity<ResponseWrapperDto> EntryExistsAlreadyExceptionHandler(EntryDoesntExistsException ex){
+        ResponseWrapperDto responseWrapperDto=ResponseWrapperDto.builder()
+        .status(HttpStatus.BAD_REQUEST.value())
+        .message(ex.getMessage())
+        .build();
+        return new ResponseEntity<>(responseWrapperDto,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(exception = InvalidInputException.class)
+    public ResponseEntity<ResponseWrapperDto> InvalidInputExceptionHandler(InvalidInputException ex){
+        ResponseWrapperDto responseWrapperDto=ResponseWrapperDto.builder()
+        .status(HttpStatus.BAD_REQUEST.value())
+        .message(ex.getMessage())
+        .build();
+        return new ResponseEntity<>(responseWrapperDto,HttpStatus.BAD_REQUEST);
+    }
 }

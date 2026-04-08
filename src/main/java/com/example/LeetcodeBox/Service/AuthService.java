@@ -2,6 +2,8 @@ package com.example.LeetcodeBox.Service;
 
 import java.util.Optional;
 
+import javax.imageio.IIOException;
+
 import org.springframework.stereotype.Service;
 
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
@@ -9,6 +11,7 @@ import com.example.LeetcodeBox.Dto.UserRequestDto;
 import com.example.LeetcodeBox.Dto.UserResponseDto;
 import com.example.LeetcodeBox.Entity.UserEntity;
 import com.example.LeetcodeBox.Exception.EntryExistsAlreadyException;
+import com.example.LeetcodeBox.Exception.InvalidInputException;
 import com.example.LeetcodeBox.Repository.UserRepository;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
@@ -20,7 +23,10 @@ public class AuthService {
     private final UserRepository userRepository;
 
     public ResponseWrapperDto SignUp(UserRequestDto userRequestDto){
-        Optional<UserEntity> checker = userRepository.findByMailId(userRequestDto.getMailId());
+        if(userRequestDto.getMailId()==null || userRequestDto.getMailId().trim().length()==0){
+            throw new InvalidInputException("Invalid Parameter");
+        }
+        Optional<UserEntity> checker = userRepository.findByMailId(userRequestDto.getMailId().trim());
         if(checker.isPresent()){
             throw new EntryExistsAlreadyException("User already exist with name "+userRequestDto.getName());
         }
@@ -30,7 +36,7 @@ public class AuthService {
         String hash=BCrypt.withDefaults().hashToString(12, userRequestDto.getPassword().toCharArray());
         UserEntity userEntity=UserEntity.builder()
         .name(userRequestDto.getName())
-        .mailId(userRequestDto.getMailId())
+        .mailId(userRequestDto.getMailId().trim())
         .password(hash)
         .build();
         UserEntity record=userRepository.save(userEntity);

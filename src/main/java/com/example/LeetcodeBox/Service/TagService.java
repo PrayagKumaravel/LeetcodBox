@@ -11,6 +11,7 @@ import com.example.LeetcodeBox.Dto.TagRequestDto;
 import com.example.LeetcodeBox.Entity.TagEntity;
 import com.example.LeetcodeBox.Exception.EmptyEntityException;
 import com.example.LeetcodeBox.Exception.EntryExistsAlreadyException;
+import com.example.LeetcodeBox.Exception.InvalidInputException;
 import com.example.LeetcodeBox.Repository.TagRepository;
 
 import jakarta.transaction.Transactional;
@@ -23,6 +24,13 @@ public class TagService {
     private final TagRepository tagRepository;
 
     public ResponseWrapperDto CreateTag(String name){
+        if(name==null){
+            throw new InvalidInputException("Invalid Input");
+        }
+        name=name.trim();
+        if(name.length()==0){
+            throw new InvalidInputException("Invalid Input");
+        }
         Optional<TagEntity> checker=tagRepository.findByName(name.toUpperCase());
         if(checker.isPresent()){
             throw new EntryExistsAlreadyException(name+" tag already exists");
@@ -48,6 +56,13 @@ public class TagService {
     }
 
     public ResponseWrapperDto DeleteTag(String name){
+        if(name==null){
+            throw new InvalidInputException("Invalid Input");
+        }
+        name=name.trim();
+        if(name.length()==0){
+            throw new InvalidInputException("Invalid Input");
+        }
         tagRepository.deleteByName(name.toUpperCase());
         return ResponseWrapperDto.builder().status(200).message("Deletion done sucessfully").build();
     }
