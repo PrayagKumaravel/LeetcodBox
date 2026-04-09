@@ -26,7 +26,7 @@ public class AuthService {
         }
         Optional<UserEntity> checker = userRepository.findByMailId(userRequestDto.getMailId().trim());
         if(checker.isPresent()){
-            throw new EntryExistsAlreadyException("User already exist with name "+userRequestDto.getName());
+            throw new EntryExistsAlreadyException("User already exist with Mail "+userRequestDto.getMailId());
         }
         //password to be hashed -> password + salt
         //hashed password structure-> version+cost+salt+password

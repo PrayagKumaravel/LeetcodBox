@@ -45,4 +45,14 @@ public class GlobalExceptionHandler {
         .build();
         return new ResponseEntity<>(responseWrapperDto,HttpStatus.BAD_REQUEST);
     }
+
+
+    @ExceptionHandler(exception = WrongPasswordException.class)
+    public ResponseEntity<ResponseWrapperDto> WrongPasswordExceptionHandler(WrongPasswordException ex){
+        ResponseWrapperDto responseWrapperDto=ResponseWrapperDto.builder()
+        .status(HttpStatus.BAD_REQUEST.value())
+        .message(ex.getMessage())
+        .build();
+        return new ResponseEntity<>(responseWrapperDto,HttpStatus.BAD_REQUEST);
+    }
 }

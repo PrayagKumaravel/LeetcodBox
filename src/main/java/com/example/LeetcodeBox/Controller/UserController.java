@@ -4,11 +4,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
-import com.example.LeetcodeBox.Dto.UserRequestDto;
 import com.example.LeetcodeBox.Dto.UserUpdationDto;
 import com.example.LeetcodeBox.Service.UserService;
 
@@ -25,8 +23,13 @@ public class UserController {
         return userService.GetAll();
     }
 
-    @PatchMapping("/update")
+    @PatchMapping("/update/mail-id")
     public ResponseWrapperDto UpdateMailId(@RequestBody UserUpdationDto userUpdationDto){
         return userService.UpdateMailId(userUpdationDto);
+    }
+
+    @PatchMapping("/update/password")
+    public ResponseWrapperDto UpdatePassword(@RequestBody UserUpdationDto userUpdationDto){
+        return userService.UpdatePassword(userUpdationDto);
     }
 }
