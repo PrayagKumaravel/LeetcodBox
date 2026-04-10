@@ -55,4 +55,13 @@ public class GlobalExceptionHandler {
         .build();
         return new ResponseEntity<>(responseWrapperDto,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(exception = JoinTableException.class)
+    public ResponseEntity<ResponseWrapperDto> JoinTableExceptionHandler(JoinTableException ex){
+        ResponseWrapperDto responseWrapperDto=ResponseWrapperDto.builder()
+        .status(HttpStatus.BAD_REQUEST.value())
+        .message(ex.getMessage())
+        .build();
+        return new ResponseEntity<>(responseWrapperDto,HttpStatus.BAD_REQUEST);
+    }
 }

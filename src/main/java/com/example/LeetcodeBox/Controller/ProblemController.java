@@ -1,0 +1,26 @@
+package com.example.LeetcodeBox.Controller;
+
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.LeetcodeBox.Dto.ProblemRequestDto;
+import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
+import com.example.LeetcodeBox.Service.ProblemService;
+
+import lombok.RequiredArgsConstructor;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("api/problem")
+public class ProblemController {
+    private final ProblemService problemService;
+
+    @PostMapping("create")
+    public ResponseWrapperDto CreateProblem(@RequestBody ProblemRequestDto problemRequestDto){
+        return problemService.CreateProblem(problemRequestDto);
+    }
+
+
+}

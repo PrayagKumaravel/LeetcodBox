@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.example.LeetcodeBox.Entity.TagEntity;
 import java.util.Optional;
+import java.util.Set;
 
 
 @Repository
@@ -13,4 +14,6 @@ public interface TagRepository extends JpaRepository<TagEntity,Long>{
     Optional<TagEntity> findByName(String name);
 
     void deleteByName(String name);
+
+    Set<TagEntity> findByNameIn(Set<String> names);
 }

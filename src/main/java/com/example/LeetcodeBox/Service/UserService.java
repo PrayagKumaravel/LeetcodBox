@@ -45,36 +45,36 @@ public class UserService {
         return ResponseWrapperDto.builder().status(200).users(userResponseDtos).build();
     }
 
-    public ResponseWrapperDto UpdateMailId(UserUpdationDto userRequestDto){
-        if(userRequestDto.getMailId()==null || 
-            userRequestDto.getMailId().trim().length()==0|| 
-            userRequestDto.getNewMailId()==null || 
-            userRequestDto.getMailId().trim().length()==0 ||
-            userRequestDto.getPassword()==null ||
-            userRequestDto.getPassword().trim().length()==0){
-            throw new InvalidInputException("Some parameters are missing");
-        }
-        Optional<UserEntity> userEntity=userRepository.findByMailId(userRequestDto.getMailId().trim());
-        if(userEntity.isEmpty()){
-            throw new EntryDoesntExistsException("No user with this MailId");
-        }
-        UserEntity record=userEntity.get();
-        if(!BCrypt.verifyer().verify(userRequestDto.getPassword().toCharArray(),record.getPassword()).verified){
-            throw new WrongPasswordException("Wrong password");
-        }
-        record.setMailId(userRequestDto.getNewMailId().trim());
-        UserEntity updated_record=userRepository.save(record);
-        return ResponseWrapperDto.builder().status(200)
-        .message("MailId updated sucessfully")
-        .user(
-            UserResponseDto.builder()
-            .name(updated_record.getName())
-            .mailId(updated_record.getMailId().trim())
-            .username(updated_record.getUsername())
-            .build()
-        )
-        .build();
-    }
+    // /*public ResponseWrapperDto UpdateMailId(UserUpdationDto userRequestDto){
+    //     if(userRequestDto.getMailId()==null || 
+    //         userRequestDto.getMailId().trim().length()==0|| 
+    //         userRequestDto.getNewMailId()==null || 
+    //         userRequestDto.getMailId().trim().length()==0 ||
+    //         userRequestDto.getPassword()==null ||
+    //         userRequestDto.getPassword().trim().length()==0){
+    //         throw new InvalidInputException("Some parameters are missing");
+    //     }
+    //     Optional<UserEntity> userEntity=userRepository.findByMailId(userRequestDto.getMailId().trim());
+    //     if(userEntity.isEmpty()){
+    //         throw new EntryDoesntExistsException("No user with this MailId");
+    //     }
+    //     UserEntity record=userEntity.get();
+    //     if(!BCrypt.verifyer().verify(userRequestDto.getPassword().toCharArray(),record.getPassword()).verified){
+    //         throw new WrongPasswordException("Wrong password");
+    //     }
+    //     record.setMailId(userRequestDto.getNewMailId().trim());
+    //     UserEntity updated_record=userRepository.save(record);
+    //     return ResponseWrapperDto.builder().status(200)
+    //     .message("MailId updated sucessfully")
+    //     .user(
+    //         UserResponseDto.builder()
+    //         .name(updated_record.getName())
+    //         .mailId(updated_record.getMailId().trim())
+    //         .username(updated_record.getUsername())
+    //         .build()
+    //     )
+    //     .build();
+    // }*/
 
     public ResponseWrapperDto UpdatePassword(UserUpdationDto userUpdationDto){
         if(userUpdationDto.getPassword()==null ||

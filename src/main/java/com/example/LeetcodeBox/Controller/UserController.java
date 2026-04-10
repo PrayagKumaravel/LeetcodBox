@@ -23,10 +23,10 @@ public class UserController {
         return userService.GetAll();
     }
 
-    @PatchMapping("/update/mail-id")
+    /*@PatchMapping("/update/mail-id")
     public ResponseWrapperDto UpdateMailId(@RequestBody UserUpdationDto userUpdationDto){
         return userService.UpdateMailId(userUpdationDto);
-    }
+    }*/
 
     @PatchMapping("/update/password")
     public ResponseWrapperDto UpdatePassword(@RequestBody UserUpdationDto userUpdationDto){
