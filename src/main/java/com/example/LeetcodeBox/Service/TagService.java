@@ -20,9 +20,11 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
+@Transactional// it is used fro rollback and commit, jps used transactional by defult to its default methods
+//but for user cutom methods users must implemenet transactional annottaion to implemet these feature
 public class TagService {
     private final TagRepository tagRepository;
+    private final SideService sideService;
 
     public ResponseWrapperDto CreateTag(String name){
         if(name==null){
@@ -64,7 +66,17 @@ public class TagService {
         if(name.length()==0){
             throw new InvalidInputException("Invalid Input");
         }
-        tagRepository.deleteByName(name.toUpperCase());
+        name=name.toUpperCase();
+        //since its related with join table(problemtag) -> first cut the link, then delete the tag
+        Optional<TagEntity> record=tagRepository.findByName(name);
+        if(record.isPresent()){
+            sideService.UnlinkTag(
+                record.get()
+            );
+        }
+        
+        //nw delete tag from tagentity
+        tagRepository.deleteByName(name);//will save automatcially since i have used transactional
         return ResponseWrapperDto.builder().status(200).message("Deletion done sucessfully").build();
     }
     
