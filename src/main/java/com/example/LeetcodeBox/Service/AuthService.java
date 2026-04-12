@@ -21,7 +21,10 @@ public class AuthService {
     private final UserRepository userRepository;
 
     public ResponseWrapperDto SignUp(UserRequestDto userRequestDto){
-        if(userRequestDto.getMailId()==null || userRequestDto.getMailId().trim().length()==0){
+        if(userRequestDto.getMailId()==null || 
+            userRequestDto.getMailId().trim().length()==0 ||
+            userRequestDto.getPassword()==null ||
+            userRequestDto.getPassword().trim().length()==0){
             throw new InvalidInputException("Invalid Parameter");
         }
         Optional<UserEntity> checker = userRepository.findByMailId(userRequestDto.getMailId().trim());

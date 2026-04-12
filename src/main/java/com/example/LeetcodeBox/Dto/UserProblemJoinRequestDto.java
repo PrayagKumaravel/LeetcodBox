@@ -18,12 +18,12 @@ import lombok.Setter;
 @JsonIgnoreProperties(ignoreUnknown=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Builder
-public class UserProblemRequestDto {
+public class UserProblemJoinRequestDto {
     @NotBlank(message="UserName is required")
-    private String user_name;
+    private UserRequestDto user;
 
     @NotBlank(message = "Problem Name is required")
-    private String problem_name;
+    private ProblemRequestDto problem;
 
     private String notes;
 

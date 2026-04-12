@@ -1,13 +1,22 @@
 package com.example.LeetcodeBox.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
+import com.example.LeetcodeBox.Dto.ProblemRequestDto;
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
+import com.example.LeetcodeBox.Dto.TagRequestDto;
+import com.example.LeetcodeBox.Dto.UserProblemJoinRequestDto;
+import com.example.LeetcodeBox.Dto.UserRequestDto;
 import com.example.LeetcodeBox.Entity.ProblemEntity;
 import com.example.LeetcodeBox.Entity.TagEntity;
+import com.example.LeetcodeBox.Entity.UserEntity;
+import com.example.LeetcodeBox.Entity.UserProblemJoinEntity;
 import com.example.LeetcodeBox.Repository.ProblemRepository;
 import com.example.LeetcodeBox.Repository.TagRepository;
 
@@ -32,6 +41,52 @@ public class SideService {
         return ResponseWrapperDto.builder()
         .status(200)
         .message("Unlinked Tag with Problems")
+        .build();
+    }
+
+    //called from problemservice 
+    public boolean tagsExist(Set<TagRequestDto> tagRequestDtos){
+        for(TagRequestDto tagRequestDto:tagRequestDtos){
+            Optional<TagEntity> record=tagRepository.findByName(tagRequestDto.getName().toUpperCase());
+            if(record.isEmpty()){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public UserProblemJoinRequestDto UserProblemJoinEntityToDto(UserProblemJoinEntity userProblemJoinEntity){
+        return  UserProblemJoinRequestDto.builder()
+                .user(UserEntityToDto(userProblemJoinEntity.getUser()))
+                .problem(ProblemEntityToDto(userProblemJoinEntity.getProblem()))
+                .notes(userProblemJoinEntity.getNotes())
+                .status(userProblemJoinEntity.getStatus())
+                .time(userProblemJoinEntity.getAverage_time())
+                .build();
+    }
+    public UserRequestDto UserEntityToDto(UserEntity userEntity){
+
+        return UserRequestDto.builder()
+        .name(userEntity.getName())
+        .mailId(userEntity.getMailId())
+        .build();
+    }
+
+    public ProblemRequestDto ProblemEntityToDto(ProblemEntity problemEntity){
+        Set<TagRequestDto> tagRequestDtos=new HashSet<>();
+        for(TagEntity tagEntity:problemEntity.getTags()){
+            tagRequestDtos.add(TagEntityToDto(tagEntity));
+        }
+        return ProblemRequestDto.builder()
+        .title(problemEntity.getTitle())
+        .url(problemEntity.getUrl())
+        .tags(tagRequestDtos)
+        .build();
+    }
+    
+    public TagRequestDto TagEntityToDto(TagEntity tagEntity){
+        return TagRequestDto.builder()
+        .name(tagEntity.getName())
         .build();
     }
 }

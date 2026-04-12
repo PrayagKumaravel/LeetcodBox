@@ -8,6 +8,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,9 +29,13 @@ public class UserProblemJoinEntity {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Long id;
 
-    private Long user_id;
+    //many rows of userproblem can have one user
+    @ManyToOne
+    private UserEntity user;
 
-    private Long problem_id;
+    //many rows of userproblem can have one problem
+    @ManyToOne
+    private ProblemEntity problem;
 
     private String notes;
 

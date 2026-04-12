@@ -3,7 +3,6 @@ package com.example.LeetcodeBox.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import org.springframework.stereotype.Service;
 
@@ -79,16 +78,6 @@ public class TagService {
         tagRepository.deleteByName(name);//will save automatcially since i have used transactional
         return ResponseWrapperDto.builder().status(200).message("Deletion done sucessfully").build();
     }
-    
-    //called from problemservice 
-    public boolean tagsExist(Set<TagRequestDto> tagRequestDtos){
-        for(TagRequestDto tagRequestDto:tagRequestDtos){
-            Optional<TagEntity> record=tagRepository.findByName(tagRequestDto.getName().toUpperCase());
-            if(record.isEmpty()){
-                return false;
-            }
-        }
-        return true;
-    }
+
 
 }

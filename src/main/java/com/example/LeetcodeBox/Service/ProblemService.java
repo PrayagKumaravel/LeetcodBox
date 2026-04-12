@@ -1,6 +1,9 @@
 package com.example.LeetcodeBox.Service;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
 import com.example.LeetcodeBox.Dto.TagRequestDto;
 import com.example.LeetcodeBox.Entity.ProblemEntity;
 import com.example.LeetcodeBox.Entity.TagEntity;
+import com.example.LeetcodeBox.Exception.EntryDoesntExistsException;
 import com.example.LeetcodeBox.Exception.EntryExistsAlreadyException;
 import com.example.LeetcodeBox.Exception.JoinTableException;
 import com.example.LeetcodeBox.Repository.ProblemRepository;
@@ -22,18 +26,20 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Transactional
 public class ProblemService {
+    private final SideService sideService;
     private final ProblemRepository problemRepository;
-    private final TagService tagService;
     private final TagRepository tagRepository;
+
 
     public ResponseWrapperDto CreateProblem(ProblemRequestDto problemRequestDto){
         //if already problem exist
-        if(problemRepository.findByTitle(problemRequestDto.getTitle().toUpperCase()).isPresent()){
+        if(problemRepository.findByTitle(problemRequestDto.getTitle().toUpperCase()).isPresent() ||
+            problemRepository.findByUrl(problemRequestDto.getUrl()).isPresent()){
             ///try inserting new tags
             throw new EntryExistsAlreadyException("This Problem Exists already");
         }
         //check whether given tags are in Tag db already
-        if(!tagService.tagsExist(problemRequestDto.getTags())){
+        if(!sideService.tagsExist(problemRequestDto.getTags())){
             throw new JoinTableException("Some tags specified are not in Tag Entity");
         }
         Set<String> names=new HashSet<>();
@@ -68,5 +74,33 @@ public class ProblemService {
         .build();
     }
 
+    public ResponseWrapperDto GetProblemDetails(String title){
+        Optional<ProblemEntity> record=problemRepository.findByTitle(title);
+        if(record.isEmpty()){
+            throw new EntryDoesntExistsException("Problem with title "+title+" doesn't exist");
+        }
+
+        Set<TagEntity> tagEntities=record.get().getTags();
+        Set<TagRequestDto> tagRequestDtos=new HashSet<>();
+        for(TagEntity tagEntity:tagEntities){
+            tagRequestDtos.add(
+                TagRequestDto.builder()
+                .name(tagEntity.getName())
+                .build()
+            );
+        }
+
+        return ResponseWrapperDto.builder()
+        .status(200)
+        .message("Sucessfully fetched")
+        .problem(
+            ProblemRequestDto.builder()
+            .title(record.get().getTitle())
+            .url(record.get().getUrl())
+            .tags(tagRequestDtos)
+            .build()
+        )
+        .build();
+    }
     
 }

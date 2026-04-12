@@ -40,6 +40,6 @@ public class ResponseWrapperDto {
     private ProblemRequestDto problem;
     private List<ProblemRequestDto> problems;
 
-    private UserProblemRequestDto user_problem_detail;
-    private List<UserProblemRequestDto> user_problem_details;
+    private UserProblemJoinRequestDto user_problem_detail;
+    private List<UserProblemJoinRequestDto> user_problem_details;
 }

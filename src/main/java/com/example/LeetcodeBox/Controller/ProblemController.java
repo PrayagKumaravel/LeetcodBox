@@ -1,8 +1,10 @@
 package com.example.LeetcodeBox.Controller;
 
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.LeetcodeBox.Dto.ProblemRequestDto;
@@ -22,5 +24,9 @@ public class ProblemController {
         return problemService.CreateProblem(problemRequestDto);
     }
 
+    @GetMapping()
+    public ResponseWrapperDto GetProblemDetails(@RequestParam String title){
+        return problemService.GetProblemDetails(title);
+    }
 
 }
