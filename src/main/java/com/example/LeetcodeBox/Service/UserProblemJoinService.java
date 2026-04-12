@@ -1,13 +1,9 @@
 package com.example.LeetcodeBox.Service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import org.apache.catalina.User;
-import org.apache.catalina.connector.Response;
 import org.springframework.stereotype.Service;
 
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
