@@ -12,6 +12,7 @@ import com.example.LeetcodeBox.Dto.UserRequestDto;
 import com.example.LeetcodeBox.Entity.ProblemEntity;
 import com.example.LeetcodeBox.Entity.UserEntity;
 import com.example.LeetcodeBox.Entity.UserProblemJoinEntity;
+import com.example.LeetcodeBox.Enum.SolvingStatusEnum;
 import com.example.LeetcodeBox.Exception.EntryDoesntExistsException;
 import com.example.LeetcodeBox.Exception.EntryExistsAlreadyException;
 import com.example.LeetcodeBox.Exception.InvalidInputException;
@@ -51,6 +52,8 @@ public class UserProblemJoinService {
         .problem(problemRecord.get())
         .notes(userProblemJoinRequestDto.getNotes())
         .status(userProblemJoinRequestDto.getStatus())
+        .frequency(1l)
+        .solved_frequency(userProblemJoinRequestDto.getStatus().toString()=="SOLVED"?1l:0l)
         .average_time(userProblemJoinRequestDto.getTime())
         .build();
 
@@ -89,4 +92,51 @@ public class UserProblemJoinService {
         .build();
     }
 
+    //update user problem details of preexisting user -> problem //fix average time
+    public ResponseWrapperDto UpdateUserProblemDetail(UserProblemJoinRequestDto userProblemJoinRequestDto){
+        
+        if(userProblemJoinRequestDto.getUser().getMailId()==null || 
+           userProblemJoinRequestDto.getUser().getMailId().length()==0 ||
+            userProblemJoinRequestDto.getProblem().getUrl()==null ||
+            userProblemJoinRequestDto.getProblem().getUrl().trim().length()==0){
+                throw new InvalidInputException("Invalid Entry");
+           }
+
+        Optional<ProblemEntity> problemEntity=problemRepository.findByUrl(userProblemJoinRequestDto.getProblem().getUrl());
+        Optional<UserEntity> userEntity=userRepository.findByMailId(userProblemJoinRequestDto.getUser().getMailId());
+
+        if(problemEntity.isEmpty() || userEntity.isEmpty()){
+            throw new EntryDoesntExistsException("No entry exist with this user problem detail");
+        }
+        List<UserProblemJoinEntity> userProblemJoinEntities=userProblemJoinRepository.findByProblemAndUser(problemEntity.get(),userEntity.get());
+
+        if(userProblemJoinEntities.isEmpty()){
+            throw new EntryDoesntExistsException("Sorry, No entry with these details");
+        }
+        
+        UserProblemJoinEntity userProblemJoinEntity=userProblemJoinEntities.get(0);
+        SolvingStatusEnum statusEnum=!userProblemJoinEntity.getStatus().toString().equals("SOLVED")?
+            userProblemJoinRequestDto.getStatus():userProblemJoinEntity.getStatus();
+        
+        Long prev_frequency=userProblemJoinEntity.getFrequency();
+
+        userProblemJoinEntity.setNotes(userProblemJoinRequestDto.getNotes());
+        userProblemJoinEntity.setStatus(statusEnum);
+        userProblemJoinEntity.setFrequency(userProblemJoinEntity.getFrequency()+1);
+        if(userProblemJoinRequestDto.getStatus().toString().equals("SOLVED")){
+            userProblemJoinEntity.setSolved_frequency(userProblemJoinEntity.getSolved_frequency()+1);
+        }
+        //fix
+        if(userProblemJoinRequestDto.getTime()>60){
+            userProblemJoinRequestDto.setTime(60l);
+        }
+        userProblemJoinEntity.setAverage_time(((prev_frequency*userProblemJoinEntity.getAverage_time())+userProblemJoinRequestDto.getTime())/(prev_frequency+1));        
+        
+        userProblemJoinRepository.save(userProblemJoinEntity);
+
+        return ResponseWrapperDto.builder()
+        .status(200)
+        .message("Updation Sucessful")
+        .build();
+    }
 }

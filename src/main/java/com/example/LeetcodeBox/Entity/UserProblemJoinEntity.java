@@ -44,5 +44,7 @@ public class UserProblemJoinEntity {
 
     private Long frequency;
 
+    private Long solved_frequency;
+
     private Long average_time;
 }

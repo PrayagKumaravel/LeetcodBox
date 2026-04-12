@@ -60,9 +60,11 @@ public class SideService {
                 .problem(ProblemEntityToDto(userProblemJoinEntity.getProblem()))
                 .notes(userProblemJoinEntity.getNotes())
                 .status(userProblemJoinEntity.getStatus())
+                .rate(((double)userProblemJoinEntity.getSolved_frequency()/(double)userProblemJoinEntity.getFrequency())*100)
                 .time(userProblemJoinEntity.getAverage_time())
                 .build();
     }
+
     public UserRequestDto UserEntityToDto(UserEntity userEntity){
 
         return UserRequestDto.builder()
@@ -86,6 +88,33 @@ public class SideService {
     public TagRequestDto TagEntityToDto(TagEntity tagEntity){
         return TagRequestDto.builder()
         .name(tagEntity.getName())
+        .build();
+    }
+
+    public ProblemEntity ProblemRequestDtoToEntity(ProblemRequestDto problemRequestDto){
+
+        Set<TagEntity> tagEntities=new HashSet<>();
+        for(TagRequestDto tagRequestDto:problemRequestDto.getTags()){
+            tagEntities.add(TagRequestDtoToEntity(tagRequestDto));
+        }
+
+        return ProblemEntity.builder()
+        .title(problemRequestDto.getTitle())
+        .url(problemRequestDto.getUrl())
+        .tags(tagEntities)
+        .build();
+    }
+
+    public UserEntity UserRequestDtoToEntity(UserRequestDto userRequestDto){
+        return UserEntity.builder()
+        .name(userRequestDto.getName())
+        .mailId(userRequestDto.getMailId())
+        .build();
+    }
+
+    public TagEntity TagRequestDtoToEntity(TagRequestDto tagRequestDto){
+        return TagEntity.builder()
+        .name(tagRequestDto.getName())
         .build();
     }
 }

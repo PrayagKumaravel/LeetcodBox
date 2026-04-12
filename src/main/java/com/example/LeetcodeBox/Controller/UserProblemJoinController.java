@@ -1,6 +1,7 @@
 package com.example.LeetcodeBox.Controller;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,5 +28,10 @@ public class UserProblemJoinController {
     @GetMapping("/details")
     public ResponseWrapperDto GetUserDetails(@RequestBody UserRequestDto userRequestDto){
         return userProblemJoinService.GetUserDetails(userRequestDto);
+    }
+    
+    @PatchMapping("/update/problem")
+    public ResponseWrapperDto UpdateUserProblemDetail(@RequestBody UserProblemJoinRequestDto userProblemJoinRequestDto){
+        return userProblemJoinService.UpdateUserProblemDetail(userProblemJoinRequestDto);
     }
 }

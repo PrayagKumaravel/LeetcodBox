@@ -29,5 +29,7 @@ public class UserProblemJoinRequestDto {
 
     private SolvingStatusEnum status;
 
+    private Double rate;
+
     private Long time;
 }
