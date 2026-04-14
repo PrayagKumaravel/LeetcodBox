@@ -34,4 +34,9 @@ public class UserProblemJoinController {
     public ResponseWrapperDto UpdateUserProblemDetail(@RequestBody UserProblemJoinRequestDto userProblemJoinRequestDto){
         return userProblemJoinService.UpdateUserProblemDetail(userProblemJoinRequestDto);
     }
+
+    @GetMapping("/fetch-all-problem")
+    public ResponseWrapperDto FetchAllProblemOfUser(@RequestBody UserRequestDto userRequestDto){
+        return userProblemJoinService.FetchAllProblemOfUser(userRequestDto);
+    }
 }

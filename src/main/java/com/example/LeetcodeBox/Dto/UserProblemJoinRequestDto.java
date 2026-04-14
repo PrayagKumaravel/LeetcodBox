@@ -1,5 +1,6 @@
 package com.example.LeetcodeBox.Dto;
 
+import com.example.LeetcodeBox.Enum.ModeEnum;
 import com.example.LeetcodeBox.Enum.SolvingStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -24,6 +25,10 @@ public class UserProblemJoinRequestDto {
 
     @NotBlank(message = "Problem Name is required")
     private ProblemRequestDto problem;
+
+    private ModeEnum mode;
+
+    private String content;
 
     private String notes;
 

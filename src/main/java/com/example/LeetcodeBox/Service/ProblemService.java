@@ -31,8 +31,7 @@ public class ProblemService {
 
     public ResponseWrapperDto CreateProblem(ProblemRequestDto problemRequestDto){
         //if already problem exist
-        if(problemRepository.findByTitle(problemRequestDto.getTitle().toUpperCase()).isPresent() ||
-            problemRepository.findByUrl(problemRequestDto.getUrl()).isPresent()){
+        if(problemRepository.findByUrl(problemRequestDto.getUrl()).isPresent()){
             ///try inserting new tags
             throw new EntryExistsAlreadyException("This Problem Exists already");
         }

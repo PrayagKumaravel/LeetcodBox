@@ -6,6 +6,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.example.LeetcodeBox.Dto.ProblemRequestDto;
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
 import com.example.LeetcodeBox.Dto.UserProblemJoinRequestDto;
 import com.example.LeetcodeBox.Dto.UserRequestDto;
@@ -34,6 +35,7 @@ public class UserProblemJoinService {
 
     private final ProblemService problemService;
     private final SideService sideService;
+    private final PredictionService predictionService;
 
     public ResponseWrapperDto AssignUserProblem(UserProblemJoinRequestDto userProblemJoinRequestDto){
         
@@ -47,10 +49,12 @@ public class UserProblemJoinService {
             problemService.CreateProblem(userProblemJoinRequestDto.getProblem());
             problemRecord=problemRepository.findByUrl(userProblemJoinRequestDto.getProblem().getUrl());
         }
+
         UserProblemJoinEntity userProblemJoinEntity=UserProblemJoinEntity.builder()
         .user(userRecord.get())
         .problem(problemRecord.get())
-        .notes(userProblemJoinRequestDto.getNotes())
+        //check this working once 
+        .notes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle()))
         .status(userProblemJoinRequestDto.getStatus())
         .frequency(1l)
         .solved_frequency(userProblemJoinRequestDto.getStatus().toString()=="SOLVED"?1l:0l)
@@ -91,8 +95,7 @@ public class UserProblemJoinService {
         .user_problem_details(userProblemJoinRequestDtos)
         .build();
     }
-
-    //update user problem details of preexisting user -> problem //fix average time
+    //update user problem details of preexisting user -> problem //fix average time //fix mode
     public ResponseWrapperDto UpdateUserProblemDetail(UserProblemJoinRequestDto userProblemJoinRequestDto){
         
         if(userProblemJoinRequestDto.getUser().getMailId()==null || 
@@ -120,7 +123,7 @@ public class UserProblemJoinService {
         
         Long prev_frequency=userProblemJoinEntity.getFrequency();
 
-        userProblemJoinEntity.setNotes(userProblemJoinRequestDto.getNotes());
+        userProblemJoinEntity.setNotes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle()));
         userProblemJoinEntity.setStatus(statusEnum);
         userProblemJoinEntity.setFrequency(userProblemJoinEntity.getFrequency()+1);
         if(userProblemJoinRequestDto.getStatus().toString().equals("SOLVED")){
@@ -137,6 +140,21 @@ public class UserProblemJoinService {
         return ResponseWrapperDto.builder()
         .status(200)
         .message("Updation Sucessful")
+        .build();
+    }
+
+    public ResponseWrapperDto FetchAllProblemOfUser(UserRequestDto userRequestDto){
+        List<UserProblemJoinRequestDto> userproblemDetails=GetUserDetails(userRequestDto).getUser_problem_details();
+        List<ProblemRequestDto> problemRequestDtos=new ArrayList<>();
+
+        for(UserProblemJoinRequestDto userProblemJoinRequestDto:userproblemDetails){
+            problemRequestDtos.add(userProblemJoinRequestDto.getProblem());
+        }
+
+        return ResponseWrapperDto.builder()
+        .status(200)
+        .message("Fetched sucessful")
+        .problems(problemRequestDtos)
         .build();
     }
 }

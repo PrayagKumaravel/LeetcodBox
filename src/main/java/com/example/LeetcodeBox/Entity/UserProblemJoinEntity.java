@@ -2,6 +2,7 @@ package com.example.LeetcodeBox.Entity;
 
 import com.example.LeetcodeBox.Enum.SolvingStatusEnum;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -37,6 +38,8 @@ public class UserProblemJoinEntity {
     @ManyToOne
     private ProblemEntity problem;
 
+
+    @Column(columnDefinition = "TEXT",length = 5000) //says db to treat it as text(larger content)
     private String notes;
 
     @Enumerated(EnumType.STRING)
