@@ -50,11 +50,13 @@ public class UserProblemJoinService {
             problemRecord=problemRepository.findByUrl(userProblemJoinRequestDto.getProblem().getUrl());
         }
 
+        String lang=userProblemJoinRequestDto.getLang()!=null?userProblemJoinRequestDto.getLang().toString():null;
+
         UserProblemJoinEntity userProblemJoinEntity=UserProblemJoinEntity.builder()
         .user(userRecord.get())
         .problem(problemRecord.get())
         //check this working once 
-        .notes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle()))
+        .notes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle(),lang))
         .status(userProblemJoinRequestDto.getStatus())
         .frequency(1l)
         .solved_frequency(userProblemJoinRequestDto.getStatus().toString()=="SOLVED"?1l:0l)
@@ -95,7 +97,7 @@ public class UserProblemJoinService {
         .user_problem_details(userProblemJoinRequestDtos)
         .build();
     }
-    //update user problem details of preexisting user -> problem //fix average time //fix mode
+   
     public ResponseWrapperDto UpdateUserProblemDetail(UserProblemJoinRequestDto userProblemJoinRequestDto){
         
         if(userProblemJoinRequestDto.getUser().getMailId()==null || 
@@ -121,9 +123,11 @@ public class UserProblemJoinService {
         SolvingStatusEnum statusEnum=!userProblemJoinEntity.getStatus().toString().equals("SOLVED")?
             userProblemJoinRequestDto.getStatus():userProblemJoinEntity.getStatus();
         
+         String lang=userProblemJoinRequestDto.getLang()!=null?userProblemJoinRequestDto.getLang().toString():null;
+
         Long prev_frequency=userProblemJoinEntity.getFrequency();
 
-        userProblemJoinEntity.setNotes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle()));
+        userProblemJoinEntity.setNotes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle(),lang));
         userProblemJoinEntity.setStatus(statusEnum);
         userProblemJoinEntity.setFrequency(userProblemJoinEntity.getFrequency()+1);
         if(userProblemJoinRequestDto.getStatus().toString().equals("SOLVED")){

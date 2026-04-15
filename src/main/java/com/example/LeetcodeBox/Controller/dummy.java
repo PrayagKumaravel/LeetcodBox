@@ -16,7 +16,7 @@ public class dummy {
     private final PredictionService predictionService;
 
     @PostMapping("/process")
-    public String dummyprocess(@RequestParam String content, @RequestParam String title){
-        return predictionService.ProcessWithGroq(content,title);
+    public String dummyprocess(@RequestParam String content, @RequestParam String title,@RequestParam String lang){
+        return predictionService.ProcessWithGroq(content,title,lang);
     }
 }

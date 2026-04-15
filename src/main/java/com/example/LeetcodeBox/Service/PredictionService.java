@@ -26,14 +26,13 @@ public class PredictionService {
     @Value("${Groq.api.key}")
     private String Groq_api_key;
 
-    public String ProcessWithGroq(String content,String problem_title){
+    public String ProcessWithGroq(String content,String problem_title,String lang){
 
         //prefered  programming language feature
-
         List<MessageRequestDto> messageRequestDtos=new ArrayList<>();
         messageRequestDtos.add(MessageRequestDto.builder()
             .role("user")
-            .content(BuildContent(content, problem_title))
+            .content(BuildContent(content, problem_title,lang))
             .build());
         //buyildinfg request
         GroqRequestDto groqRequestDto=GroqRequestDto.builder()
@@ -45,8 +44,12 @@ public class PredictionService {
         return ExtractContent(groqResponseDto);
     }
 
-    public String BuildContent(String content,String problem_title){
+    public String BuildContent(String content,String problem_title,String lang){
         StringBuilder content_for_Groq=new StringBuilder();
+        if(lang==null || lang.trim().length()==0){
+            content_for_Groq.append("Prefered Programming Language: "+lang);
+        }
+        
         content_for_Groq.append("Generate Notes for the given below Code along with correct approach \n");
         if(content!=null && content.trim().length()>0){
             content_for_Groq.append(content);

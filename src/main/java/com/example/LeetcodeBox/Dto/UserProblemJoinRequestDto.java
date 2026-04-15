@@ -1,6 +1,7 @@
 package com.example.LeetcodeBox.Dto;
 
 import com.example.LeetcodeBox.Enum.ModeEnum;
+import com.example.LeetcodeBox.Enum.ProgrammingLanguageEnum;
 import com.example.LeetcodeBox.Enum.SolvingStatusEnum;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -29,6 +30,8 @@ public class UserProblemJoinRequestDto {
     private ModeEnum mode;
 
     private String content;
+
+    private ProgrammingLanguageEnum lang;
 
     private String notes;
 
