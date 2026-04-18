@@ -76,6 +76,7 @@ public class ProblemService {
         .build();
     }
 
+    //update problem tag, add remove
     //fix using url (later)
     public ResponseWrapperDto GetProblemDetails(String title){
         Optional<ProblemEntity> record=problemRepository.findByTitle(title);
@@ -107,19 +108,21 @@ public class ProblemService {
     }
     //get problems with tag x (of user y)
 
-    //mukltiple tags (upgrade)
-    public ResponseWrapperDto GetProblemsOfTag(TagRequestDto tagRequestDto){
+    //mukltiple tags (upgrade done)
+    public ResponseWrapperDto GetProblemsOfTag(ProblemRequestDto problemRequestDto){
 
-        if(tagRequestDto.getName()==null || tagRequestDto.getName().trim().length()==0){
-            throw new InvalidInputException("Tag Name is Required");
+        Set<TagRequestDto> tag=problemRequestDto.getTags();
+        Set<String> names=new HashSet<>();
+        for(TagRequestDto tagRequestDto:tag){
+            if(tagRequestDto.getName()==null || tagRequestDto.getName().trim().length()==0){
+                throw new InvalidInputException("Tag Name is Required");
+            }
+            names.add(tagRequestDto.getName().toUpperCase());
         }
-
-        Set<TagEntity> tagEntities=new HashSet<>();
-        Optional<TagEntity> tagEntity=tagRepository.findByName(tagRequestDto.getName().toUpperCase());
-        if(tagEntity.isEmpty()){
+        Set<TagEntity> tagEntities=tagRepository.findByNameIn(names);
+        if(tagEntities.isEmpty()){
             throw new EntryDoesntExistsException("Sorry No tags named this exists");
         }
-        tagEntities.add(tagEntity.get());
 
         Set<ProblemEntity> problemEntities=problemRepository.findByTagsIn(tagEntities);
         List<ProblemRequestDto> problemRequestDtos=new ArrayList<>();

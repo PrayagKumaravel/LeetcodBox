@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.LeetcodeBox.Dto.ProblemRequestDto;
 import com.example.LeetcodeBox.Dto.ResponseWrapperDto;
-import com.example.LeetcodeBox.Dto.TagRequestDto;
 import com.example.LeetcodeBox.Service.ProblemService;
 
 import lombok.RequiredArgsConstructor;
@@ -30,9 +29,9 @@ public class ProblemController {
         return problemService.GetProblemDetails(title);
     }
 
-    @GetMapping("/tag")
-    public ResponseWrapperDto GetProblemsOfTag(@RequestBody TagRequestDto tagRequestDto){
-        return problemService.GetProblemsOfTag(tagRequestDto);
+    @GetMapping("/tags")
+    public ResponseWrapperDto GetProblemsOfTag(@RequestBody ProblemRequestDto problemRequestDto){
+        return problemService.GetProblemsOfTag(problemRequestDto);
     }
 
 

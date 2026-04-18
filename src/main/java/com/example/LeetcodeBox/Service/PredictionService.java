@@ -47,6 +47,9 @@ public class PredictionService {
     public String BuildContent(String content,String problem_title,String lang){
         StringBuilder content_for_Groq=new StringBuilder();
         if(lang==null || lang.trim().length()==0){
+            content_for_Groq.append("Prefered Programming Language: JAVA ");
+        }
+        else{
             content_for_Groq.append("Prefered Programming Language: "+lang);
         }
         

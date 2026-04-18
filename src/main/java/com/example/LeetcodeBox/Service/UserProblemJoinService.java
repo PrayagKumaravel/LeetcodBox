@@ -56,7 +56,7 @@ public class UserProblemJoinService {
         .user(userRecord.get())
         .problem(problemRecord.get())
         //check this working once 
-        .notes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),userProblemJoinRequestDto.getProblem().getTitle(),lang))
+        .notes(userProblemJoinRequestDto.getMode().toString()=="MANUAL"?userProblemJoinRequestDto.getNotes():predictionService.ProcessWithGroq(userProblemJoinRequestDto.getContent(),problemRecord.get().getTitle(),lang))
         .status(userProblemJoinRequestDto.getStatus())
         .frequency(1l)
         .solved_frequency(userProblemJoinRequestDto.getStatus().toString()=="SOLVED"?1l:0l)
@@ -146,7 +146,7 @@ public class UserProblemJoinService {
         .message("Updation Sucessful")
         .build();
     }
-
+//SAME AS GET USER DETAILS
     public ResponseWrapperDto FetchAllProblemOfUser(UserRequestDto userRequestDto){
         List<UserProblemJoinRequestDto> userproblemDetails=GetUserDetails(userRequestDto).getUser_problem_details();
         List<ProblemRequestDto> problemRequestDtos=new ArrayList<>();
