@@ -14,9 +14,11 @@ import com.example.LeetcodeBox.Repository.UserRepository;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class AuthService {
     private final UserRepository userRepository;
 
@@ -25,10 +27,12 @@ public class AuthService {
             userRequestDto.getMailId().trim().length()==0 ||
             userRequestDto.getPassword()==null ||
             userRequestDto.getPassword().trim().length()==0){
+                log.error("Invalid Parameter - Some parameters are missing");
             throw new InvalidInputException("Invalid Parameter");
         }
         Optional<UserEntity> checker = userRepository.findByMailId(userRequestDto.getMailId().trim());
         if(checker.isPresent()){
+            log.error("User already exist with Mail "+userRequestDto.getMailId());
             throw new EntryExistsAlreadyException("User already exist with Mail "+userRequestDto.getMailId());
         }
         //password to be hashed -> password + salt
@@ -41,6 +45,7 @@ public class AuthService {
         .password(hash)
         .build();
         UserEntity record=userRepository.save(userEntity);
+        log.info("User SignedUp Sucessfully");
         return ResponseWrapperDto.builder().user(
             UserResponseDto.builder()
             .name(record.getName())

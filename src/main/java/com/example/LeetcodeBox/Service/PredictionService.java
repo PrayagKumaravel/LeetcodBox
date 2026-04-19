@@ -12,9 +12,11 @@ import com.example.LeetcodeBox.Dto.GroqResponseDto;
 import com.example.LeetcodeBox.Dto.MessageRequestDto;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class PredictionService {
 
 
@@ -34,12 +36,14 @@ public class PredictionService {
             .role("user")
             .content(BuildContent(content, problem_title,lang))
             .build());
+
         //buyildinfg request
         GroqRequestDto groqRequestDto=GroqRequestDto.builder()
         .model("llama-3.3-70b-versatile")
         .messages(messageRequestDtos)
         .build();
-
+        log.info("Model used llama-3.3-70b-versatile");
+        log.info("Groq Request Dto created sucessfully");
         GroqResponseDto groqResponseDto=HitTheGroq(groqRequestDto);
         return ExtractContent(groqResponseDto);
     }
@@ -58,6 +62,7 @@ public class PredictionService {
             content_for_Groq.append(content);
         }
         content_for_Groq.append("problem title from leetcode: "+problem_title+"\n");
+        log.info("Content sucessfully built");
         return content_for_Groq.toString();
     }
 
@@ -70,12 +75,12 @@ public class PredictionService {
         .retrieve()
         .bodyToMono(GroqResponseDto.class)
         .block();
-
+        log.info("Hit Groq Api wth request using Webclient was sucessfull");
         return groqResponseDto;
     }
 
     public String ExtractContent(GroqResponseDto groqResponseDto){
-
+        log.info("Content extraction was sucessfull");
         return groqResponseDto.getChoices()
         .get(0)
         .getMessage()

@@ -22,10 +22,12 @@ import com.example.LeetcodeBox.Repository.TagRepository;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class ProblemService {
     private final SideService sideService;
     private final ProblemRepository problemRepository;
@@ -36,12 +38,15 @@ public class ProblemService {
         //if already problem exist
         if(problemRepository.findByUrl(problemRequestDto.getUrl()).isPresent() ||
             problemRepository.findByTitle(problemRequestDto.getTitle()).isPresent()){
-            ///try inserting new tags
+            
             ///problem Exist already
+            log.error("This problem Exists already");
             throw new EntryExistsAlreadyException("This Problem Exists already");
         }
         //check whether given tags are in Tag db already
         if(!sideService.tagsExist(problemRequestDto.getTags())){
+            //try inserting new tags
+            log.error("Some tags specified are not in TagEntity");
             throw new JoinTableException("Some tags specified are not in Tag Entity");
         }
         Set<String> names=new HashSet<>();
@@ -51,12 +56,14 @@ public class ProblemService {
             );
         }
         Set<TagEntity> tagEntities=tagRepository.findByNameIn(names);
+        log.info("Records found for all tags");
         ProblemEntity problemEntity=ProblemEntity.builder()
         .title(problemRequestDto.getTitle().toUpperCase())
         .url(problemRequestDto.getUrl())
         .tags(tagEntities)
         .build();
         ProblemEntity record=problemRepository.save(problemEntity);
+        log.info("Record saved sucessfully");
         Set<TagRequestDto> tagRequestDtos=new HashSet<>();
         for(TagEntity tagEntity:record.getTags()){
             tagRequestDtos.add(TagRequestDto.builder()
@@ -65,6 +72,7 @@ public class ProblemService {
             );
         }
         
+        log.info("Problem Created sucessfully");
         return ResponseWrapperDto.builder()
         .problem(
             ProblemRequestDto.builder()
@@ -81,6 +89,7 @@ public class ProblemService {
     public ResponseWrapperDto GetProblemDetails(String title){
         Optional<ProblemEntity> record=problemRepository.findByTitle(title);
         if(record.isEmpty()){
+            log.error("Problem with title "+title+" doesn't exist");
             throw new EntryDoesntExistsException("Problem with title "+title+" doesn't exist");
         }
 
@@ -94,6 +103,7 @@ public class ProblemService {
             );
         }
 
+        log.info("Problem with title "+title+" was sucessfully fetched");
         return ResponseWrapperDto.builder()
         .status(200)
         .message("Sucessfully fetched")
@@ -109,18 +119,20 @@ public class ProblemService {
     //get problems with tag x (of user y)
 
     //mukltiple tags (upgrade done)
-    public ResponseWrapperDto GetProblemsOfTag(ProblemRequestDto problemRequestDto){
+    public ResponseWrapperDto GetProblemsOfTags(ProblemRequestDto problemRequestDto){
 
         Set<TagRequestDto> tag=problemRequestDto.getTags();
         Set<String> names=new HashSet<>();
         for(TagRequestDto tagRequestDto:tag){
             if(tagRequestDto.getName()==null || tagRequestDto.getName().trim().length()==0){
+                log.error("Tag name is required");
                 throw new InvalidInputException("Tag Name is Required");
             }
             names.add(tagRequestDto.getName().toUpperCase());
         }
         Set<TagEntity> tagEntities=tagRepository.findByNameIn(names);
         if(tagEntities.isEmpty()){
+            log.error("No single tag exists");
             throw new EntryDoesntExistsException("Sorry No tags named this exists");
         }
 
@@ -133,10 +145,12 @@ public class ProblemService {
             }
         }
         
+        log.info("Sucessfully fetched problems of given tags");
         return ResponseWrapperDto.builder()
         .status(200)
         .message("Sucessfully fetched")
         .problems(problemRequestDtos)
         .build();
     }
+//update url of problem based on user choice, when user input title is already in db
 }

@@ -1,5 +1,6 @@
 package com.example.LeetcodeBox.Controller;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +31,8 @@ public class ProblemController {
     }
 
     @GetMapping("/tags")
-    public ResponseWrapperDto GetProblemsOfTag(@RequestBody ProblemRequestDto problemRequestDto){
-        return problemService.GetProblemsOfTag(problemRequestDto);
+    public ResponseWrapperDto GetProblemsOfTags(@RequestBody ProblemRequestDto problemRequestDto){
+        return problemService.GetProblemsOfTags(problemRequestDto);
     }
 
 
